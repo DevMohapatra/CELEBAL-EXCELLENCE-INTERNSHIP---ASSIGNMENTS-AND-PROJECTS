@@ -17,8 +17,7 @@ Per program guidelines, this one repository is used throughout the internship fo
 ## 🛠️ Tech Stack
 
 - Python
-- Jupyter Notebook
-- NumPy, Pandas, Matplotlib, SciPy
+- NumPy, Pandas, Matplotlib
 
 ## 🎓 About the Internship
 
