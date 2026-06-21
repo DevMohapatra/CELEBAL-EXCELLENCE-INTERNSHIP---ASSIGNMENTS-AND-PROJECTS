@@ -10,7 +10,7 @@ Per program guidelines, this one repository is used throughout the internship fo
 
 | Week | Topic | Status | Link |
 |------|-------|--------|------|
-| Week 1 | ML Foundations (Python, NumPy, Pandas, Linear Algebra, Statistics, Probability) | ✅ Submitted | [`week1/`](./week1) |
+| Week 1 | ML Foundations (Python, NumPy, Pandas, Linear Algebra, Statistics, Probability) | ✅ Submitted | [`week1/`](./week1_Debiprasad_Mohapatra.ipynb) |
 | Week 2 | TBD | ⏳ Pending | |
 | ... | ... | | |
 
