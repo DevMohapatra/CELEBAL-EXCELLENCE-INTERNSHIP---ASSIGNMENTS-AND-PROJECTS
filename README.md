@@ -10,8 +10,8 @@ Per program guidelines, this one repository is used throughout the internship fo
 
 | Week | Topic | Status | Link |
 |------|-------|--------|------|
-| Week 1 | ML Foundations (Python, NumPy, Pandas, Linear Algebra, Statistics, Probability) | ✅ Submitted | [`week1/`](./week1_Debiprasad_Mohapatra.ipynb) |
-| Week 2 | TBD | ⏳ Pending | |
+| Week 1 | Python and Libraries, Statistics and Probability | ✅ Submitted | [`week1/`](./week1_Debiprasad_Mohapatra.ipynb) |
+| Week 2 | Classical Machine Learning | ⏳ Pending | |
 | ... | ... | | |
 
 ## 🛠️ Tech Stack
