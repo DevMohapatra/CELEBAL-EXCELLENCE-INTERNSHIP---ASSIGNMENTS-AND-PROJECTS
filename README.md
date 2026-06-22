@@ -17,7 +17,8 @@ Per program guidelines, this one repository is used throughout the internship fo
 ## 🛠️ Tech Stack
 
 - Python
-- NumPy, Pandas, Matplotlib
+- Python Libraries ( NumPy, Pandas, Matplotlib )
+- Mathematics for ML ( Linear Algebra, Probability, Statisitics )
 
 ## 🎓 About the Internship
 
