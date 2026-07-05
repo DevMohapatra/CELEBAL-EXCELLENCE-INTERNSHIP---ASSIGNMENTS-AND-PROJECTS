@@ -11,14 +11,17 @@ Per program guidelines, this one repository is used throughout the internship fo
 | Week | Topic | Status | Link |
 |------|-------|--------|------|
 | Week 1 | Python and Libraries, Statistics and Probability | ✅ Submitted | [`week1/`](./week1_Debiprasad_Mohapatra.ipynb) |
-| Week 2 | Classical Machine Learning | ✅ Submitted | [`week2/`](./week2_Debiprasad_Mohapatra/week2_Debiprasad_Mohapatra.ipynb)|
-| Week 3 | ML Classification Models | ⏳ Pending | ...|
+| Week 2 | Classical Machine Learning | ✅ Submitted | [`week2/`](./week2_Debiprasad_Mohapatra/week2_Debiprasad_Mohapatra.ipynb) |
+| Week 3 | ML Classification Models | ✅ Submitted | [`week3/`](./week3_Debiprasad_Mohapatra/week3_Debiprasad_Mohapatra.ipynb) |
+| Week 3 | Deep Learning | ⏳ Pending | ... |
 
 ## 🛠️ Tech Stack
 
 - Python
 - Python Libraries ( NumPy, Pandas, Matplotlib )
 - Mathematics for ML ( Linear Algebra, Probability, Statisitics )
+- Pipelines, Feature Transformation, Time Series Component and Stationarity
+- Classification Models of ML 
 
 ## 🎓 About the Internship
 
