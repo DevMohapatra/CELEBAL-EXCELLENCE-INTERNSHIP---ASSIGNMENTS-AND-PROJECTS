@@ -14,7 +14,8 @@ Per program guidelines, this one repository is used throughout the internship fo
 | Week 2 | Classical Machine Learning | ✅ Submitted | [`week2/`](./week2_Debiprasad_Mohapatra/week2_Debiprasad_Mohapatra.ipynb) |
 | Week 3 | ML Classification Models | ✅ Submitted | [`week3/`](./week3_Debiprasad_Mohapatra/week3_Debiprasad_Mohapatra.ipynb) |
 | Week 4 | Deep Learning | ✅ Submitted | [`week4/`](./week4_Debiprasad_Mohapatra/week4_Debiprasad_Mohapatra.ipynb) |
-| Week 5 | RNN | ⏳ Pending | ... |
+| Week 5 | RNN | ✅ Submitted | [`week4/`](./week5_Debiprasad_Mohapatra/week5_Debiprasad_Mohapatra.ipynb) |
+| Week 6 | AE and GAN | ⏳ Pending | ... |
 
 ## 🛠️ Tech Stack
 
