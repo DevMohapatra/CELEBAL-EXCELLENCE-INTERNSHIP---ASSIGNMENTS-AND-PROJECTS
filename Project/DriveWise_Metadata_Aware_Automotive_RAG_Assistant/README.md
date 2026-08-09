@@ -50,17 +50,12 @@ Every query also gets logged to a small SQLite file so you can see response time
 ```bash
 cd drivewise
 pip install -r requirements.txt
-python src/ingest.py
 streamlit run streamlit_app.py
 ```
 
-`python src/ingest.py` parses every PDF in `data/` and writes the results to `logs/chunk_cache.json`. You'll see it print progress per brochure (e.g. "Parsed Honda/Elevate.pdf: 42 chunks").
+Opens at `http://localhost:8501`. First run parses every PDF in `data/` - takes a few seconds per brochure, and you'll see a live progress bar climbing through them (e.g. "Parsing Honda/Elevate.pdf (3/23)"). After that first parse, results are cached to `logs/chunk_cache.json`, so every run after is close to instant - it only re-parses a brochure if that specific PDF file has changed.
 
-`streamlit run streamlit_app.py` then opens at `http://localhost:8501` and only reads `logs/chunk_cache.json` - it never touches `data/` or re-parses anything at runtime. If the cache file doesn't exist yet, the app shows an error telling you to run `ingest.py` first.
-
-**Adding your own brochures:** drop the PDF into `data/<Brand>/<Model>.pdf`, then rerun `python src/ingest.py` to rebuild the cache, then restart Streamlit. No limit on how many brands or models. If one PDF is corrupt or unreadable, it's skipped with a warning instead of breaking the whole rebuild.
-
-Note: rerunning `ingest.py` does a full rebuild from whatever's currently in `data/` - it's not additive. If you remove a PDF from `data/` before rerunning, its chunks disappear from the cache too.
+**Adding your own brochures:** just drop the PDF into `data/<Brand>/<Model>.pdf` and restart. No limit on how many brands or models - add as many as you want. If one PDF happens to be corrupt or unreadable, it gets skipped with a warning instead of taking the whole app down.
 
 ## Getting real LLM answers instead of raw excerpts
 
@@ -78,22 +73,19 @@ If a call fails for any reason (bad key, network issue, model deprecated), the a
 
 ## Deploying it live (free) - Streamlit Community Cloud
 
-1. Run `python src/ingest.py` locally first, so `logs/chunk_cache.json` is up to date.
-2. Push the repo to GitHub, **PDFs and `logs/chunk_cache.json` both included** - Streamlit Cloud only sees what's actually committed, not what's on your disk, and it will never run `ingest.py` for you.
-3. Go to [share.streamlit.io](https://share.streamlit.io) → sign in with GitHub → New app.
-4. Point it at your repo, set the main file to `streamlit_app.py`.
-5. In **Settings → Secrets**, add the same two lines as your `.env`:
+1. Push the repo to GitHub, **PDFs included** - Streamlit Cloud only sees what's actually committed, not what's on your disk.
+2. Go to [share.streamlit.io](https://share.streamlit.io) → sign in with GitHub → New app.
+3. Point it at your repo, set the main file to `streamlit_app.py`.
+4. In **Settings → Secrets**, add the same two lines as your `.env`:
    ```
    GROQ_API_KEY = "gsk_..."
    GROQ_MODEL = "llama-3.1-8b-instant"
    ```
-6. Deploy. The app loads `logs/chunk_cache.json` directly - no parsing happens on Streamlit Cloud.
-
-Whenever you add or change brochures: rerun `python src/ingest.py` locally, commit the updated `logs/chunk_cache.json`, and push - Streamlit Cloud auto-redeploys with the refreshed cache.
+5. Deploy. First load will parse everything (same progress bar), then it's cached for everyone after.
 
 You end up with a public `your-app-name.streamlit.app` URL.
 
-*(Not on Vercel - it's serverless with no persistent disk, and this needs `faiss-cpu` + `pdfplumber` for the offline `ingest.py` step, plus a real long-lived process for serving. Streamlit Cloud is just the right shape for this.)*
+*(Not on Vercel - it's serverless with no persistent disk, and this needs `faiss-cpu` + `pdfplumber` running as a real long-lived process. Streamlit Cloud is just the right shape for this.)*
 
 ## How the PDF parsing actually works
 
@@ -111,3 +103,8 @@ For scanned/image-only PDFs with no actual text layer, `pdfplumber` comes back e
 - **Embeddings** are TF-IDF, not a neural model - keeps it fully offline with zero model downloads. Swap in `sentence-transformers` in `vectorstore.py` if you want better semantic matching at some added weight/latency cost.
 - **Generation** depends on Groq being reachable; no paid API involved anywhere.
 - **Parsing** is heuristic (headers + keywords), not layout-ML - brochures that are mostly graphics or complex multi-column tables will extract worse than plain text-heavy ones.
+
+---
+
+
+

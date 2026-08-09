@@ -1,7 +1,7 @@
 
 import time
 
-from ingest import load_chunks_cache_only, brands_models_from_chunks
+from ingest import build_chunks, available_brands_models
 from vectorstore import DriveWiseVectorStore
 from reranker import rerank
 from generator import generate_answer, control_context_window
@@ -11,9 +11,9 @@ import logger as qlog
 
 class DriveWisePipeline:
     def __init__(self, progress_callback=None):
-        self.chunks = load_chunks_cache_only()
+        self.chunks = build_chunks(progress_callback=progress_callback)
         self.store = DriveWiseVectorStore(self.chunks)
-        self.brands_models = brands_models_from_chunks(self.chunks)
+        self.brands_models = available_brands_models()
 
     def list_options(self):
         return self.brands_models

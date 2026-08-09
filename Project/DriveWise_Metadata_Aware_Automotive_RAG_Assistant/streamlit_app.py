@@ -23,11 +23,106 @@ st.set_page_config(page_title="DriveWise - Car Brochure Assistant", page_icon="ð
 
 
 if "pipeline" not in st.session_state:
-    try:
+    needs_parse = not Path("logs/chunk_cache.json").exists()
+    if needs_parse:
+        wave_placeholder = st.empty()
+        text_placeholder = st.empty()
+
+        wave_placeholder.markdown(
+            """
+            <style>
+            .dw-loader-wrap {
+                display: flex;
+                justify-content: center;
+                margin: 40px 0 12px 0;
+            }
+            .dw-loader {
+                position: relative;
+                width: 420px;
+                max-width: 90vw;
+                height: 64px;
+                border-radius: 32px;
+                background: #12141c;
+                border: 1px solid #2a2d3a;
+                overflow: hidden;
+                box-shadow: 0 0 24px rgba(255,90,90,0.08);
+            }
+            .dw-water {
+                position: absolute;
+                bottom: 0;
+                left: -25%;
+                width: 150%;
+                height: 100%;
+                background: linear-gradient(90deg, #ff5a5a, #ff8a5a, #ff5a5a);
+                border-radius: 45%;
+                animation: dw-flow 3.2s linear infinite, dw-rise 2.4s ease-in-out infinite alternate;
+                opacity: 0.85;
+            }
+            .dw-water::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(90deg, #ff8a5a, #ffb35a, #ff8a5a);
+                border-radius: 45%;
+                animation: dw-flow 4.5s linear infinite reverse;
+                opacity: 0.5;
+            }
+            @keyframes dw-flow {
+                from { transform: translateX(0) rotate(0deg); }
+                to   { transform: translateX(-33%) rotate(360deg); }
+            }
+            @keyframes dw-rise {
+                from { height: 28%; }
+                to   { height: 62%; }
+            }
+            .dw-loader-label {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 600;
+                font-size: 15px;
+                letter-spacing: 0.02em;
+                color: #fff;
+                text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+                z-index: 2;
+            }
+            .dw-status-text {
+                text-align: center;
+                color: #aab0c0;
+                font-size: 14px;
+                margin-top: 4px;
+            }
+            </style>
+            <div class="dw-loader-wrap">
+                <div class="dw-loader">
+                    <div class="dw-water"></div>
+                    <div class="dw-loader-label" id="dw-label">Getting started...</div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        def _update_progress(i, total, label):
+            pct = int(i / total * 100) if total else 100
+            line = LOADING_LINES[i % len(LOADING_LINES)]
+            text_placeholder.markdown(
+                f"""
+                <div class="dw-status-text">
+                    {line}<br>
+                    <span style="opacity:0.7;">{label} Â· {pct}% ({i}/{total})</span>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+        st.session_state.pipeline = DriveWisePipeline(progress_callback=_update_progress)
+        wave_placeholder.empty()
+        text_placeholder.empty()
+    else:
         st.session_state.pipeline = DriveWisePipeline()
-    except FileNotFoundError as e:
-        st.error(str(e))
-        st.stop()
 
 pipeline = st.session_state.pipeline
 options = pipeline.list_options()
