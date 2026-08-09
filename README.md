@@ -16,7 +16,9 @@ Per program guidelines, this one repository is used throughout the internship fo
 | Week 4 | Deep Learning | ✅ Submitted | [`week4/`](./week4_Debiprasad_Mohapatra/week4_Debiprasad_Mohapatra.ipynb) |
 | Week 5 | RNN | ✅ Submitted | [`week5/`](./week5_Debiprasad_Mohapatra/week5_Debiprasad_Mohapatra.ipynb) |
 | Week 6 | AE and GAN | ✅ Submitted | [`week6/`](./week6_Debiprasad_Mohapatra/week6_Debiprasad_Mohapatra.ipynb) |
-| Week 7 | RAG and LLMs | ⏳ Pending | ... |
+| Week 7 | RAG and LLMs | ✅ Submitted | [`week7/`](./week7_Debiprasad_Mohapatra/week7_Debiprasad_Mohapatra.ipynb) |
+| Week 8 | Agentic AI | ✅ Submitted | [`week8/`](./week8_Debiprasad_Mohapatra/week8_Debiprasad_Mohapatra.ipynb) |
+| Project | DriveWise | ✅ Submitted | [`Project`](./Project/DriveWise_Metadata_Aware_Automotive_RAG_Assistant/README.md). |
 
 ## 🛠️ Tech Stack
 
