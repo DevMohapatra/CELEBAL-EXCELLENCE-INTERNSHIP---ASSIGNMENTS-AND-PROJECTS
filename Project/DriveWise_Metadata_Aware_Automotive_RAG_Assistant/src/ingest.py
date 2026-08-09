@@ -85,7 +85,26 @@ def build_chunks(data_dir: Path = DATA_DIR, use_cache: bool = True, force_rebuil
         }))
 
     return chunks
+def load_chunks_cache_only() -> list[Chunk]:
+    if not CACHE_PATH.exists():
+        raise FileNotFoundError(
+            "No chunk cache found. Run `python src/ingest.py` first to parse the data folder."
+        )
+    cached = json.loads(CACHE_PATH.read_text())
+    return [
+        Chunk(
+            chunk_id=c["chunk_id"], text=c["text"],
+            brand=c["metadata"]["brand"], model=c["metadata"]["model"],
+            section=c["metadata"]["section"], page=c["metadata"]["page"],
+            doc_version=c["metadata"]["document_version"],
+            brochure_name=c["metadata"]["brochure_name"],
+        )
+        for c in cached["chunks"]
+    ]
 
+
+def brands_models_from_chunks(chunks: list[Chunk]) -> list[tuple]:
+    return sorted({(c.metadata["brand"], c.metadata["model"]) for c in chunks})
 
 def available_brands_models(data_dir: Path = DATA_DIR) -> list[tuple]:
     return list_brand_models(data_dir)
