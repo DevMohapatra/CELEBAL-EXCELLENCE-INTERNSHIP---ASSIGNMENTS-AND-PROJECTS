@@ -18,7 +18,7 @@ Per program guidelines, this one repository is used throughout the internship fo
 | Week 6 | AE and GAN | ✅ Submitted | [`week6/`](./week6_Debiprasad_Mohapatra/week6_Debiprasad_Mohapatra.ipynb) |
 | Week 7 | RAG and LLMs | ✅ Submitted | [`week7/`](./week7_Debiprasad_Mohapatra/week7_Debiprasad_Mohapatra.ipynb) |
 | Week 8 | Agentic AI | ✅ Submitted | [`week8/`](./week8_Debiprasad_Mohapatra/week8_Debiprasad_Mohapatra.ipynb) |
-| Project | DriveWise | ✅ Submitted | [`Project`](./Project/DriveWise_Metadata_Aware_Automotive_RAG_Assistant/README.md). |
+| Project | DriveWise | ✅ Submitted | [`Project`](./Project/DriveWise_Metadata_Aware_Automotive_RAG_Assistant/README.md) |
 
 ## 🛠️ Tech Stack
 
