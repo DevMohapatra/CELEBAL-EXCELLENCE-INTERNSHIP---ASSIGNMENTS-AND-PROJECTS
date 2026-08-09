@@ -20,15 +20,6 @@ Per program guidelines, this one repository is used throughout the internship fo
 | Week 8 | Agentic AI | ✅ Submitted | [`week8/`](./week8_Debiprasad_Mohapatra/week8_Debiprasad_Mohapatra.ipynb) |
 | Project | DriveWise | ✅ Submitted | [`Project`](./Project/DriveWise_Metadata_Aware_Automotive_RAG_Assistant/README.md) |
 
-## 🛠️ Tech Stack
-
-- Python
-- Python Libraries ( NumPy, Pandas, Matplotlib )
-- Mathematics for ML ( Linear Algebra, Probability, Statisitics )
-- Pipelines, Feature Transformation, Time Series Component and Stationarity
-- Classification Models of ML 
-- Introduction to Deep Learning
-
 ## 🎓 About the Internship
 
 Celebal Excellence Internship — Celebal Technologies, 2026 Cohort.
