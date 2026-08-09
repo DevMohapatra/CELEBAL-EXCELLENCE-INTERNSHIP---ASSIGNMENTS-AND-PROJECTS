@@ -1,0 +1,7 @@
+streamlit
+numpy
+scikit-learn
+faiss-cpu
+rank-bm25
+pdfplumber
+python-dotenv
