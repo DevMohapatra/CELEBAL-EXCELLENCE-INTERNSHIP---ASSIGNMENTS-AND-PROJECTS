@@ -136,3 +136,25 @@ For scanned/image-only PDFs with no actual text layer, `pdfplumber` comes back e
 - **Embeddings** are TF-IDF, not a neural model - keeps it fully offline with zero model downloads. Swap in `sentence-transformers` in `vectorstore.py` if you want better semantic matching at some added weight/latency cost.
 - **Generation** depends on Groq being reachable; no paid API involved anywhere.
 - **Parsing** is heuristic (headers + keywords), not layout-ML - brochures that are mostly graphics or complex multi-column tables will extract worse than plain text-heavy ones.
+
+---
+
+## Create brand data folder and brochure (node script)
+
+A small Node script is provided to create a `data` folder next to `src`, create a brand subfolder, and place a `brochure.pdf` inside it.
+
+Usage:
+
+```powershell
+# from the project root (Project/DriveWise_Metadata Aware Automotive RAG Assistant)
+node scripts/create_data.js <BrandName> [path/to/brochure.pdf]
+
+# examples
+node scripts/create_data.js DriveWise            # creates data/DriveWise/brochure.pdf (placeholder)
+node scripts/create_data.js DriveWise brochure.pdf  # copies local brochure.pdf into data/DriveWise/
+```
+
+Notes:
+- If you provide a source path for the brochure, the file will be copied into the brand folder as `brochure.pdf`.
+- If no source is provided the script will create a small placeholder file named `brochure.pdf`. Replace it with your real PDF later.
+
