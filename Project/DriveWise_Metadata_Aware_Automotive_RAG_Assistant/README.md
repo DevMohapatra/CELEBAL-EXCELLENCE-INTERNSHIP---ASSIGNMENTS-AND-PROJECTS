@@ -1,5 +1,7 @@
 # DriveWise - Car Brochure Assistant
 
+Link to Streamlit Cloud - https://drive-wise-rag-assistant.streamlit.app/
+
 Ask a question about a car and get an answer pulled straight from the actual manufacturer brochure, with the source (section + page number) shown alongside it. Built as a RAG pipeline over real PDF brochures.
 
 ## How it's organized
