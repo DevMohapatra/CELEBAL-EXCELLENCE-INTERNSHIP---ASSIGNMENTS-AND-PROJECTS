@@ -1,4 +1,3 @@
-
 import json
 import uuid
 from pathlib import Path
@@ -85,6 +84,38 @@ def build_chunks(data_dir: Path = DATA_DIR, use_cache: bool = True, force_rebuil
         }))
 
     return chunks
+
+
+def load_chunks_cache_only() -> list[Chunk]:
+    """Reads logs/chunk_cache.json directly. Never touches data/ or the parser.
+    Raises if the cache doesn't exist -- run `python src/ingest.py` first."""
+    if not CACHE_PATH.exists():
+        raise FileNotFoundError(
+            "No chunk cache found at logs/chunk_cache.json. "
+            "Run `python src/ingest.py` first to parse data/ and build it."
+        )
+    cached = json.loads(CACHE_PATH.read_text())
+    chunks = [
+        Chunk(
+            chunk_id=c["chunk_id"], text=c["text"],
+            brand=c["metadata"]["brand"], model=c["metadata"]["model"],
+            section=c["metadata"]["section"], page=c["metadata"]["page"],
+            doc_version=c["metadata"]["document_version"],
+            brochure_name=c["metadata"]["brochure_name"],
+        )
+        for c in cached["chunks"]
+    ]
+    if not chunks:
+        raise ValueError(
+            "logs/chunk_cache.json exists but has 0 chunks. "
+            "data/ was likely empty when `python src/ingest.py` was last run -- "
+            "add PDFs to data/<Brand>/<Model>.pdf and rerun ingest.py."
+        )
+    return chunks
+
+
+def brands_models_from_chunks(chunks: list[Chunk]) -> list[tuple]:
+    return sorted({(c.metadata["brand"], c.metadata["model"]) for c in chunks})
 
 
 def available_brands_models(data_dir: Path = DATA_DIR) -> list[tuple]:

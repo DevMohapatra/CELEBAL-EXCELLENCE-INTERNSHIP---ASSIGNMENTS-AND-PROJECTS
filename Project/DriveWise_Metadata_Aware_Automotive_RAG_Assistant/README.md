@@ -45,17 +45,24 @@ excerpt if Groq isn't reachable) → answer comes back with its source page(s) a
 
 Every query also gets logged to a small SQLite file so you can see response times and whether the LLM actually fired or it fell back to raw extraction.
 
-## Running it
+## Parsing and running it
+
+Parsing and serving are two separate steps on purpose. `src/ingest.py` is the only piece of code that ever reads `data/` and runs the PDF parser - it turns every brochure into chunks and writes them to `logs/chunk_cache.json`. `streamlit_app.py` never parses anything itself; it just loads that cache file and serves questions against it. This keeps app startup fast and predictable, and means the parser never runs unexpectedly mid-session.
 
 ```bash
 cd drivewise
 pip install -r requirements.txt
+python src/ingest.py
 streamlit run streamlit_app.py
 ```
 
-Opens at `http://localhost:8501`. First run parses every PDF in `data/` - takes a few seconds per brochure, and you'll see a live progress bar climbing through them (e.g. "Parsing Honda/Elevate.pdf (3/23)"). After that first parse, results are cached to `logs/chunk_cache.json`, so every run after is close to instant - it only re-parses a brochure if that specific PDF file has changed.
+`python src/ingest.py` walks every PDF under `data/`, parses it, and writes the full result to `logs/chunk_cache.json`, printing progress per brochure as it goes (e.g. "Parsed Honda/Elevate.pdf: 42 chunks").
 
-**Adding your own brochures:** just drop the PDF into `data/<Brand>/<Model>.pdf` and restart. No limit on how many brands or models - add as many as you want. If one PDF happens to be corrupt or unreadable, it gets skipped with a warning instead of taking the whole app down.
+`streamlit run streamlit_app.py` then opens at `http://localhost:8501` and only ever reads `logs/chunk_cache.json`. If that file doesn't exist yet, the app stops with a clear message telling you to run `ingest.py` first, instead of silently trying to parse anything itself.
+
+**Adding your own brochures:** drop the PDF into `data/<Brand>/<Model>.pdf`, then rerun `python src/ingest.py` to rebuild the cache, then restart Streamlit. No limit on how many brands or models. If one PDF is corrupt or unreadable, it's skipped with a warning rather than breaking the whole rebuild.
+
+One thing to keep in mind: rerunning `ingest.py` does a full rebuild from whatever's currently sitting in `data/` - it doesn't merge with the previous cache. If you remove a PDF from `data/` before rerunning, that brochure's chunks disappear from the cache too.
 
 ## Getting real LLM answers instead of raw excerpts
 
@@ -73,19 +80,28 @@ If a call fails for any reason (bad key, network issue, model deprecated), the a
 
 ## Deploying it live (free) - Streamlit Community Cloud
 
-1. Push the repo to GitHub, **PDFs included** - Streamlit Cloud only sees what's actually committed, not what's on your disk.
-2. Go to [share.streamlit.io](https://share.streamlit.io) → sign in with GitHub → New app.
-3. Point it at your repo, set the main file to `streamlit_app.py`.
-4. In **Settings → Secrets**, add the same two lines as your `.env`:
+Streamlit Cloud has no persistent disk and never runs `ingest.py` for you, so the chunk cache has to already exist in the repo before you deploy.
+
+1. Run `python src/ingest.py` locally so `logs/chunk_cache.json` is current.
+2. Push the repo to GitHub with **both `data/` and `logs/chunk_cache.json` committed** - Streamlit Cloud only sees what's actually on GitHub, not what's on your machine.
+3. Go to [share.streamlit.io](https://share.streamlit.io) → sign in with GitHub → New app.
+4. Point it at your repo, set the main file to `streamlit_app.py`.
+5. In **Settings → Secrets**, add the same two lines as your `.env`:
    ```
    GROQ_API_KEY = "gsk_..."
    GROQ_MODEL = "llama-3.1-8b-instant"
    ```
-5. Deploy. First load will parse everything (same progress bar), then it's cached for everyone after.
+6. Deploy. The app loads `logs/chunk_cache.json` straight away - there's no parsing step and no wait on first load.
+
+Whenever you add, remove, or update brochures: rerun `python src/ingest.py` locally, commit the refreshed `logs/chunk_cache.json` alongside any `data/` changes, and push. Streamlit Cloud auto-redeploys with the new cache.
 
 You end up with a public `your-app-name.streamlit.app` URL.
 
-*(Not on Vercel - it's serverless with no persistent disk, and this needs `faiss-cpu` + `pdfplumber` running as a real long-lived process. Streamlit Cloud is just the right shape for this.)*
+*(Not on Vercel - it's serverless with no persistent disk, and this needs `faiss-cpu` + `pdfplumber` for the offline `ingest.py` step, plus a real long-lived process to serve from. Streamlit Cloud is just the right shape for this.)*
+
+## Working from a clone of this repo
+
+If you're pulling this project down to build on it: `logs/chunk_cache.json` is already committed, so `streamlit run streamlit_app.py` works immediately with zero setup. You only need to run `python src/ingest.py` yourself if you're adding, removing, or changing PDFs in `data/` and want the cache to reflect that - and if you do, commit the updated cache file along with your changes so the next person doesn't have to re-parse either.
 
 ## How the PDF parsing actually works
 
@@ -103,8 +119,3 @@ For scanned/image-only PDFs with no actual text layer, `pdfplumber` comes back e
 - **Embeddings** are TF-IDF, not a neural model - keeps it fully offline with zero model downloads. Swap in `sentence-transformers` in `vectorstore.py` if you want better semantic matching at some added weight/latency cost.
 - **Generation** depends on Groq being reachable; no paid API involved anywhere.
 - **Parsing** is heuristic (headers + keywords), not layout-ML - brochures that are mostly graphics or complex multi-column tables will extract worse than plain text-heavy ones.
-
----
-
-
-
